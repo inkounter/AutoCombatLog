@@ -1,0 +1,7 @@
+## Interface: 90500
+## Author: Inkounter
+## Title: Auto-CombatLog
+## Version: 1.0
+## Notes: Automatically enables/disables combat logging.
+
+main.lua
