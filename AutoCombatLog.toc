@@ -3,5 +3,6 @@
 ## Title: Auto-CombatLog
 ## Version: 1.0
 ## Notes: Automatically enables/disables combat logging.
+## SavedVariables: AutoCombatLogEnabledDifficultyIds
 
 main.lua
