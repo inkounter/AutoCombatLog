@@ -1,15 +1,17 @@
-local addonName, namespace = ...
+local thisAddonName, namespace = ...
 
 local logMessage = function(message)
-    print(string.format("|cFF5555BB%s:|r %s", addonName, message))
+    print(string.format("|cFF5555BB%s:|r %s", thisAddonName, message))
 end
 
-local defaultDifficultyIds = {
+local defaultEnabledDifficultyIds = {
     [8] = true,     -- Mythic Keystone
     [15] = true,    -- Heroic Raid
     [16] = true,    -- Mythic Raid
     [23] = true,    -- Mythic Dungeon
 }
+
+local enabledDifficultyIds = defaultEnabledDifficultyIds
 
 local CombatLoggerMixin = {
     ["loggingEnabled"] = false,
@@ -34,18 +36,35 @@ local CombatLoggerMixin = {
         LoggingCombat(false)
     end,
 
-    ["handleEvent"] = function(self, event)
+    ["UPDATE_INSTANCE_INFO"] = function(self)
         local difficultyId = select(3, GetInstanceInfo())
-        if defaultDifficultyIds[difficultyId] then
+        if enabledDifficultyIds[difficultyId] then
             self:enableLogging()
         else
             self:disableLogging()
         end
     end,
 
+    ["ADDON_LOADED"] = function(self, addonName)
+        if addonName ~= thisAddonName then
+            return
+        end
+
+        self:UnregisterEvent("ADDON_LOADED")
+
+        enabledDifficultyIds = _G["AutoCombatLogEnabledDifficultyIds"] or defaultEnabledDifficultyIds
+
+        DevTools_Dump(enabledDifficultyIds)
+
+        self:UPDATE_INSTANCE_INFO()
+    end,
+
     ["registerEvents"] = function(self)
         self:RegisterEvent("UPDATE_INSTANCE_INFO")
-        self:SetScript("OnEvent", self.handleEvent)
+        self:RegisterEvent("ADDON_LOADED")
+
+        self:SetScript("OnEvent",
+                       function(self, event, ...) self[event](self, ...) end)
     end,
 }
 
