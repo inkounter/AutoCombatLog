@@ -1,0 +1,36 @@
+local thisAddonName, namespace = ...
+
+local instanceDifficultyNames = {
+    -- These values are taken from WeakAuras v3.4.1.
+
+    [1]   = "Dungeon (Normal)",
+    [2]   = "Dungeon (Heroic)",
+    [3]   = "10 Player Raid (Normal)",
+    [4]   = "25 Player Raid (Normal)",
+    [5]   = "10 Player Raid (Heroic)",
+    [6]   = "25 Player Raid (Heroic)",
+    [7]   = "Legacy Looking for Raid",
+    [8]   = "Mythic Keystone",
+    [9]   = "40 Player Raid",
+    [11]  = "Scenario (Heroic)",
+    [12]  = "Scenario (Normal)",
+    [14]  = "Raid (Normal)",
+    [15]  = "Raid (Heroic)",
+    [16]  = "Raid (Mythic)",
+    [17]  = "Looking for Raid",
+    [23]  = "Dungeon (Mythic)",
+    [24]  = "Dungeon (Timewalking)",
+    [33]  = "Raid (Timewalking)",
+    [38]  = "Island Expedition (Normal)",
+    [39]  = "Island Expedition (Heroic)",
+    [40]  = "Island Expedition (Mythic)",
+    [45]  = "Island Expeditions (PvP)",
+    [147] = "Warfront (Normal)",
+    [149] = "Warfront (Heroic)",
+    [152] = "Visions of N'Zoth",
+    [167] = "Torghast",
+    [168] = "Path of Ascension: Courage",
+    [169] = "Path of Ascension: Loyalty",
+    [171] = "Path of Ascension: Humility",
+    [170] = "Path of Ascension: Wisdom",
+}
