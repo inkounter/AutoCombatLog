@@ -41,7 +41,8 @@ local CombatLoggerMixin = {
         -- "UPDATE_INSTANCE_INFO" event.
 
         local difficultyId = select(3, GetInstanceInfo())
-        if namespace.enabledDifficultyIds[difficultyId] then
+        local enabledDifficultyIds = _G["AutoCombatLogEnabledDifficultyIds"] or {}
+        if enabledDifficultyIds[difficultyId] then
             self:_enableLogging()
         else
             self:_disableLogging()
@@ -60,9 +61,8 @@ local CombatLoggerMixin = {
 
         self:UnregisterEvent("ADDON_LOADED")
 
-        local config = _G["AutoCombatLogEnabledDifficultyIds"]
-        if config ~= nil then
-            namespace.enabledDifficultyIds = config
+        if _G["AutoCombatLogEnabledDifficultyIds"] == nil then
+            _G["AutoCombatLogEnabledDifficultyIds"] = namespace.defaultEnabledDifficultyIds
         end
 
         self:_UPDATE_INSTANCE_INFO()
