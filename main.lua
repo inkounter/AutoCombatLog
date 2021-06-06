@@ -6,15 +6,6 @@ local logMessage = function(message)
     print(string.format("|cFF5555BB%s:|r %s", thisAddonName, message))
 end
 
-local defaultEnabledDifficultyIds = {
-    [8] = true,     -- Mythic Keystone
-    [15] = true,    -- Heroic Raid
-    [16] = true,    -- Mythic Raid
-    [23] = true,    -- Mythic Dungeon
-}
-
-local enabledDifficultyIds = defaultEnabledDifficultyIds
-
 local CombatLoggerMixin = {
     ["_loggingEnabled"] = false,
 
@@ -50,7 +41,7 @@ local CombatLoggerMixin = {
         -- "UPDATE_INSTANCE_INFO" event.
 
         local difficultyId = select(3, GetInstanceInfo())
-        if enabledDifficultyIds[difficultyId] then
+        if namespace.enabledDifficultyIds[difficultyId] then
             self:_enableLogging()
         else
             self:_disableLogging()
@@ -69,14 +60,15 @@ local CombatLoggerMixin = {
 
         self:UnregisterEvent("ADDON_LOADED")
 
-        enabledDifficultyIds = _G["AutoCombatLogEnabledDifficultyIds"] or defaultEnabledDifficultyIds
-
-        DevTools_Dump(enabledDifficultyIds)
+        local config = _G["AutoCombatLogEnabledDifficultyIds"]
+        if config ~= nil then
+            namespace.enabledDifficultyIds = config
+        end
 
         self:_UPDATE_INSTANCE_INFO()
     end,
 
-    ["_registerEvents"] = function(self)
+    ["registerEvents"] = function(self)
         -- Invoke methods from the 'Frame' mixin to listen for API events and
         -- to match those events to callbacks.
 
@@ -86,20 +78,9 @@ local CombatLoggerMixin = {
         self:SetScript("OnEvent",
                        function(self, event, ...) self["_" .. event](self, ...) end)
     end,
-
-    ["_createOptions"] = function(self)
-        -- Create and attach the interface options frame.
-    end,
-
-    ["install"] = function(self)
-        -- Initialize this object.
-
-        self:_registerEvents()
-        self:_createOptions()
-    end,
 }
 
 local frame = CreateFrame("Frame")
 Mixin(frame, CombatLoggerMixin)
 
-frame:install()
+frame:registerEvents()
