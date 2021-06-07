@@ -23,7 +23,17 @@ for _, difficultyInfo in ipairs(instanceDifficulties) do
         defaultEnabledDifficultyIds[difficultyInfo.id] = true
     end
 end
-namespace.defaultEnabledDifficultyIds = defaultEnabledDifficultyIds
+
+namespace.getDefaultEnabledDifficultyIds = function()
+    -- Return a clone of the table of default enabled difficulty IDs.
+
+    local clone = {}
+    for k, v in pairs(defaultEnabledDifficultyIds) do
+        clone[k] = v
+    end
+
+    return clone
+end
 
 -- Create and attach the interface options frame.
 
@@ -49,7 +59,7 @@ optionsFrame.default = function(self)
     -- Reset the enabled difficulty IDs to the default set, and force the addon
     -- to update.
 
-    _G["AutoCombatLogEnabledDifficultyIds"] = defaultEnabledDifficultyIds
+    _G["AutoCombatLogEnabledDifficultyIds"] = namespace.getDefaultEnabledDifficultyIds()
 
     namespace.updateLogging()
 end

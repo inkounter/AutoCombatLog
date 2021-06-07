@@ -62,7 +62,7 @@ local CombatLoggerMixin = {
         self:UnregisterEvent("ADDON_LOADED")
 
         if _G["AutoCombatLogEnabledDifficultyIds"] == nil then
-            _G["AutoCombatLogEnabledDifficultyIds"] = namespace.defaultEnabledDifficultyIds
+            _G["AutoCombatLogEnabledDifficultyIds"] = namespace.getDefaultEnabledDifficultyIds()
         end
 
         self:update()
