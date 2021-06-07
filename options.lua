@@ -46,9 +46,12 @@ optionsFrame.okay = function(self)
 end
 
 optionsFrame.default = function(self)
-    -- Reset the enabled difficulty IDs to the default set.
+    -- Reset the enabled difficulty IDs to the default set, and force the addon
+    -- to update.
 
     _G["AutoCombatLogEnabledDifficultyIds"] = defaultEnabledDifficultyIds
+
+    namespace.updateLogging()
 end
 
 optionsFrame.refresh = function(self)
