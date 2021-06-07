@@ -74,6 +74,7 @@ description:SetPoint("RIGHT", -32, 0)
 description:SetJustifyH("LEFT")
 description:SetJustifyV("TOP")
 description:SetMaxLines(3)
+description:SetHeight(40)
 description:SetText(string.gsub(
     [[Automatically enable combat logging when in an instance of any of the
         following difficulties.  Otherwise, disable combat logging.]],
@@ -84,13 +85,32 @@ description:SetText(string.gsub(
 
 local previousFrame = description
 
-for difficultyId, difficultyInfo in pairs(instanceDifficulties) do
-    local checkButton = CreateFrame("CheckButton", nil, optionsFrame, "OptionsBaseCheckButtonTemplate")
-    checkButton.SetValue = function() end
-    checkButton:SetPoint("TOPLEFT", previousFrame, "BOTTOMLEFT", 0, -8)
-    checkButton:SetText(difficultyInfo.name)    -- TODO: fix
-    checkButton.difficultyId = difficultyId
-    table.insert(optionsFrame.checkButtons, checkButton)
+local createLabeledCheckbox = function(parent, labelText)
+    -- Create a 'CheckButton' frame with an additional 'FontString' whose value
+    -- is the specified 'labelText'.
 
-    previousFrame = checkButton
+    local checkbox = CreateFrame("CheckButton",
+                                 nil,
+                                 parent,
+                                 "OptionsBaseCheckButtonTemplate")
+    checkbox.SetValue = function() end
+
+    local label = checkbox:CreateFontString(nil,
+                                            "ARTWORK",
+                                            "GameFontHighlight")
+    label:SetPoint("LEFT", checkbox, "RIGHT", 2, 0)
+    label:SetJustifyH("LEFT")
+    label:SetText(labelText)
+
+    return checkbox
+end
+
+for difficultyId, difficultyInfo in pairs(instanceDifficulties) do
+    local labeledCheckbox = createLabeledCheckbox(optionsFrame, difficultyInfo.name)
+    labeledCheckbox:SetPoint("TOPLEFT", previousFrame, "BOTTOMLEFT", 0, 0)
+    labeledCheckbox.difficultyId = difficultyId
+
+    table.insert(optionsFrame.checkButtons, labeledCheckbox)
+
+    previousFrame = labeledCheckbox
 end
