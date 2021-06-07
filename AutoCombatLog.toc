@@ -5,5 +5,5 @@
 ## Notes: Automatically enables/disables combat logging.
 ## SavedVariables: AutoCombatLogEnabledDifficultyIds
 
-options.lua
 main.lua
+options.lua

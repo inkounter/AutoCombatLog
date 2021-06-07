@@ -65,7 +65,7 @@ local CombatLoggerMixin = {
             _G["AutoCombatLogEnabledDifficultyIds"] = namespace.defaultEnabledDifficultyIds
         end
 
-        self:_UPDATE_INSTANCE_INFO()
+        self:update()
     end,
 
     ["registerEvents"] = function(self)
@@ -80,7 +80,13 @@ local CombatLoggerMixin = {
     end,
 }
 
+CombatLoggerMixin.update = CombatLoggerMixin._UPDATE_INSTANCE_INFO
+
 local frame = CreateFrame("Frame")
 Mixin(frame, CombatLoggerMixin)
 
 frame:registerEvents()
+
+namespace.updateLogging = function()
+    frame:update()
+end

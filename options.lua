@@ -3,6 +3,7 @@ local thisAddonName, namespace = ...
 local instanceDifficulties = {
     -- These values are taken from WeakAuras v3.4.1.
 
+    [0]   = { ["name"] = "No Instance" },
     [1]   = { ["name"] = "Dungeon (Normal)" },
     [2]   = { ["name"] = "Dungeon (Heroic)" },
     [3]   = { ["name"] = "10 Player Raid (Normal)" },
@@ -42,3 +43,54 @@ for difficultyId, difficultyInfo in pairs(instanceDifficulties) do
     end
 end
 namespace.defaultEnabledDifficultyIds = defaultEnabledDifficultyIds
+
+-- Create and attach the interface options frame.
+
+local optionsFrame = CreateFrame("Frame", nil, InterfaceOptionsFramePanelContainer)
+optionsFrame.name = thisAddonName
+
+optionsFrame.checkButtons = {}
+optionsFrame.okay = function(self)
+    local enabledDifficultyIds = _G["AutoCombatLogEnabledDifficultyIds"]
+
+    for i, checkButton in ipairs(self.checkButtons) do
+        enabledDifficultyIds[checkButton.difficultyId] = checkButton:GetChecked() or nil
+    end
+
+    namespace.updateLogging()
+end
+
+-- TODO: add 'default' and 'refresh' methods
+
+InterfaceOptions_AddCategory(optionsFrame)
+
+local title = optionsFrame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+title:SetPoint("TOPLEFT", 16, -16)
+title:SetText(thisAddonName)
+
+local description = optionsFrame:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+description:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
+description:SetPoint("RIGHT", -32, 0)
+description:SetJustifyH("LEFT")
+description:SetJustifyV("TOP")
+description:SetMaxLines(3)
+description:SetText(string.gsub(
+    [[Automatically enable combat logging when in an instance of any of the
+        following difficulties.  Otherwise, disable combat logging.]],
+    "%s+",
+    " "))
+
+-- TODO: put check buttons in a scrollable window
+
+local previousFrame = description
+
+for difficultyId, difficultyInfo in pairs(instanceDifficulties) do
+    local checkButton = CreateFrame("CheckButton", nil, optionsFrame, "OptionsBaseCheckButtonTemplate")
+    checkButton.SetValue = function() end
+    checkButton:SetPoint("TOPLEFT", previousFrame, "BOTTOMLEFT", 0, -8)
+    checkButton:SetText(difficultyInfo.name)    -- TODO: fix
+    checkButton.difficultyId = difficultyId
+    table.insert(optionsFrame.checkButtons, checkButton)
+
+    previousFrame = checkButton
+end
