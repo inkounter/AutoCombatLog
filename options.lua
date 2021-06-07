@@ -43,7 +43,12 @@ optionsFrame.okay = function(self)
     namespace.updateLogging()
 end
 
--- TODO: add 'default' and 'refresh' methods
+optionsFrame.default = function(self)
+    -- Reset the enabled difficulty IDs to the default set.
+
+    _G["AutoCombatLogEnabledDifficultyIds"] = defaultEnabledDifficultyIds
+end
+
 optionsFrame.refresh = function(self)
     -- Update the checkbuttons' states based on the enabled difficulty IDs.
 
