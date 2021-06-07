@@ -37,7 +37,7 @@ local CombatLoggerMixin = {
         LoggingCombat(false)
     end,
 
-    ["_UPDATE_INSTANCE_INFO"] = function(self)
+    ["update"] = function(self)
         -- Check the current instance difficulty and enable or disable combat
         -- logging accordingly.  Note that this handles the
         -- "UPDATE_INSTANCE_INFO" event.
@@ -70,19 +70,31 @@ local CombatLoggerMixin = {
         self:update()
     end,
 
+    ["_UPDATE_INSTANCE_INFO"] = function(self)
+        return self:update()
+    end,
+
+    ["_PLAYER_DIFFICULTY_CHANGED"] = function(self)
+        return self:update()
+    end,
+
     ["registerEvents"] = function(self)
         -- Invoke methods from the 'Frame' mixin to listen for API events and
         -- to match those events to callbacks.
 
+        -- "UPDATE_INSTANCE_INFO" is fired upon entering or leaving an
+        -- instance.  "PLAYER_DIFFICULTY_CHANGED" is fired upon starting a
+        -- keystone.
+
         self:RegisterEvent("UPDATE_INSTANCE_INFO")
+        self:RegisterEvent("PLAYER_DIFFICULTY_CHANGED")
+
         self:RegisterEvent("ADDON_LOADED")
 
         self:SetScript("OnEvent",
                        function(self, event, ...) self["_" .. event](self, ...) end)
     end,
 }
-
-CombatLoggerMixin.update = CombatLoggerMixin._UPDATE_INSTANCE_INFO
 
 local frame = CreateFrame("Frame")
 Mixin(frame, CombatLoggerMixin)
