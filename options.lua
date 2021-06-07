@@ -51,16 +51,27 @@ optionsFrame.name = thisAddonName
 
 optionsFrame.checkButtons = {}
 optionsFrame.okay = function(self)
+    -- Save the enabled difficulty IDs based on the checkbuttons' states.
+
     local enabledDifficultyIds = _G["AutoCombatLogEnabledDifficultyIds"]
 
-    for i, checkButton in ipairs(self.checkButtons) do
-        enabledDifficultyIds[checkButton.difficultyId] = checkButton:GetChecked() or nil
+    for difficultyId, checkButton in pairs(self.checkButtons) do
+        enabledDifficultyIds[difficultyId] = checkButton:GetChecked() or nil
     end
 
     namespace.updateLogging()
 end
 
 -- TODO: add 'default' and 'refresh' methods
+optionsFrame.refresh = function(self)
+    -- Update the checkbuttons' states based on the enabled difficulty IDs.
+
+    local enabledDifficultyIds = _G["AutoCombatLogEnabledDifficultyIds"]
+
+    for difficultyId, checkButton in pairs(self.checkButtons) do
+        checkButton:SetChecked(enabledDifficultyIds[difficultyId] or false)
+    end
+end
 
 InterfaceOptions_AddCategory(optionsFrame)
 
@@ -108,9 +119,8 @@ end
 for difficultyId, difficultyInfo in pairs(instanceDifficulties) do
     local labeledCheckbox = createLabeledCheckbox(optionsFrame, difficultyInfo.name)
     labeledCheckbox:SetPoint("TOPLEFT", previousFrame, "BOTTOMLEFT", 0, 0)
-    labeledCheckbox.difficultyId = difficultyId
 
-    table.insert(optionsFrame.checkButtons, labeledCheckbox)
+    optionsFrame.checkButtons[difficultyId] = labeledCheckbox
 
     previousFrame = labeledCheckbox
 end
