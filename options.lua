@@ -1,33 +1,35 @@
 local thisAddonName, namespace = ...
 
 local instanceDifficulties = {
-    -- These values are taken from WeakAuras v3.4.1.
+    -- These values are derived from WeakAuras v3.4.1.
 
-    [0]   = { ["name"] = "No Instance" },
-    [1]   = { ["name"] = "Dungeon (Normal)" },
-    [2]   = { ["name"] = "Dungeon (Heroic)" },
-    [8]   = { ["name"] = "Mythic Keystone",             ["default"] = true  },
-    [14]  = { ["name"] = "Raid (Normal)" },
-    [15]  = { ["name"] = "Raid (Heroic)",               ["default"] = true  },
-    [16]  = { ["name"] = "Raid (Mythic)",               ["default"] = true  },
-    [17]  = { ["name"] = "Looking for Raid" },
-    [23]  = { ["name"] = "Dungeon (Mythic)",            ["default"] = true  },
-    [24]  = { ["name"] = "Dungeon (Timewalking)" },
-    [33]  = { ["name"] = "Raid (Timewalking)" },
-    [167] = { ["name"] = "Torghast" },
+    { ["id"] = 0,   ["name"] = "No Instance" },
+    { ["id"] = 1,   ["name"] = "Dungeon (Normal)" },
+    { ["id"] = 2,   ["name"] = "Dungeon (Heroic)" },
+    { ["id"] = 23,  ["name"] = "Dungeon (Mythic)",  ["default"] = true },
+    { ["id"] = 8,   ["name"] = "Mythic Keystone",   ["default"] = true },
+    { ["id"] = 17,  ["name"] = "Looking for Raid" },
+    { ["id"] = 14,  ["name"] = "Raid (Normal)" },
+    { ["id"] = 15,  ["name"] = "Raid (Heroic)",     ["default"] = true },
+    { ["id"] = 16,  ["name"] = "Raid (Mythic)",     ["default"] = true },
+    { ["id"] = 24,  ["name"] = "Dungeon (Timewalking)" },
+    { ["id"] = 33,  ["name"] = "Raid (Timewalking)" },
+    { ["id"] = 167, ["name"] = "Torghast" },
 }
 
 local defaultEnabledDifficultyIds = {}
-for difficultyId, difficultyInfo in pairs(instanceDifficulties) do
+for _, difficultyInfo in ipairs(instanceDifficulties) do
     if difficultyInfo.default == true then
-        defaultEnabledDifficultyIds[difficultyId] = true
+        defaultEnabledDifficultyIds[difficultyInfo.id] = true
     end
 end
 namespace.defaultEnabledDifficultyIds = defaultEnabledDifficultyIds
 
 -- Create and attach the interface options frame.
 
-local optionsFrame = CreateFrame("Frame", nil, InterfaceOptionsFramePanelContainer)
+local optionsFrame = CreateFrame("Frame",
+                                 nil,
+                                 InterfaceOptionsFramePanelContainer)
 optionsFrame.name = thisAddonName
 
 optionsFrame.checkButtons = {}
@@ -61,11 +63,15 @@ end
 
 InterfaceOptions_AddCategory(optionsFrame)
 
-local title = optionsFrame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+local title = optionsFrame:CreateFontString(nil,
+                                            "ARTWORK",
+                                            "GameFontNormalLarge")
 title:SetPoint("TOPLEFT", 16, -16)
 title:SetText(thisAddonName)
 
-local description = optionsFrame:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+local description = optionsFrame:CreateFontString(nil,
+                                                  "ARTWORK",
+                                                  "GameFontHighlightSmall")
 description:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
 description:SetPoint("RIGHT", -32, 0)
 description:SetJustifyH("LEFT")
@@ -102,11 +108,12 @@ local createLabeledCheckbox = function(parent, labelText)
     return checkbox
 end
 
-for difficultyId, difficultyInfo in pairs(instanceDifficulties) do
-    local labeledCheckbox = createLabeledCheckbox(optionsFrame, difficultyInfo.name)
+for _, difficultyInfo in ipairs(instanceDifficulties) do
+    local labeledCheckbox = createLabeledCheckbox(optionsFrame,
+                                                  difficultyInfo.name)
     labeledCheckbox:SetPoint("TOPLEFT", previousFrame, "BOTTOMLEFT", 0, 0)
 
-    optionsFrame.checkButtons[difficultyId] = labeledCheckbox
+    optionsFrame.checkButtons[difficultyInfo.id] = labeledCheckbox
 
     previousFrame = labeledCheckbox
 end
