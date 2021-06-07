@@ -1,9 +1,10 @@
 ## Interface: 90500
 ## Author: Inkounter
-## Title: Auto-CombatLog
+## Title: AutoCombatLog
 ## Version: 1.0
 ## Notes: Automatically enables/disables combat logging.
 ## SavedVariables: AutoCombatLogEnabledDifficultyIds
 
-main.lua
 options.lua
+eventHandling.lua
+interfaceOptions.lua
