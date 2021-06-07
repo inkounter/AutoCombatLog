@@ -1,3 +1,5 @@
+-- Define and attach event handlers.
+
 local thisAddonName, namespace = ...
 
 local logMessage = function(message)
