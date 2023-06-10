@@ -1,4 +1,4 @@
-## Interface: 90500
+## Interface: 100100
 ## Author: Inkounter
 ## Title: AutoCombatLog
 ## Version: 1.0
