@@ -16,7 +16,6 @@ local instanceDifficulties = {
     { ["id"] = 16,  ["name"] = "Raid (Mythic)",     ["default"] = true },
     { ["id"] = 24,  ["name"] = "Dungeon (Timewalking)" },
     { ["id"] = 33,  ["name"] = "Raid (Timewalking)" },
-    { ["id"] = 167, ["name"] = "Torghast" },
 }
 namespace.instanceDifficulties = instanceDifficulties
 
