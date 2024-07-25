@@ -44,7 +44,7 @@ local CombatLoggerMixin = {
 
         local difficultyId = select(3, GetInstanceInfo())
         local enabledDifficultyIds = _G["AutoCombatLogEnabledDifficultyIds"] or {}
-        if enabledDifficultyIds[namespace.asVariableName(difficultyId)] then
+        if enabledDifficultyIds[difficultyId] then
             self:_enableLogging()
         else
             self:_disableLogging()

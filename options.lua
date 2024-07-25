@@ -17,9 +17,3 @@ namespace.instanceDifficulties = {
     { ["id"] = 24,  ["name"] = "Dungeon (Timewalking)" },
     { ["id"] = 33,  ["name"] = "Raid (Timewalking)" },
 }
-
-namespace.asVariableName = function(difficultyId)
-    -- Return the variable name corresponding to the specified 'difficultyId'.
-
-    return thisAddonName .. '_' .. difficultyId
-end
