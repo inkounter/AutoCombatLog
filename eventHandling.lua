@@ -44,7 +44,7 @@ local CombatLoggerMixin = {
 
         local difficultyId = select(3, GetInstanceInfo())
         local enabledDifficultyIds = _G["AutoCombatLogEnabledDifficultyIds"] or {}
-        if enabledDifficultyIds[difficultyId] then
+        if enabledDifficultyIds[namespace.asVariableName(difficultyId)] then
             self:_enableLogging()
         else
             self:_disableLogging()
@@ -53,20 +53,15 @@ local CombatLoggerMixin = {
 
     ["_ADDON_LOADED"] = function(self, addonName)
         -- If the specified 'addonName' is the name of this addon, then stop
-        -- listening for "ADDON_LOADED" events, load the saved variable, and
-        -- re-execute the enablement/disablement of combat logging.  Otherwise,
-        -- if 'addonName' is not the name of this addon, do nothing.
+        -- listening for "ADDON_LOADED" events and re-execute the
+        -- enablement/disablement of combat logging.  Otherwise, if 'addonName'
+        -- is not the name of this addon, do nothing.
 
         if addonName ~= thisAddonName then
             return
         end
 
         self:UnregisterEvent("ADDON_LOADED")
-
-        if _G["AutoCombatLogEnabledDifficultyIds"] == nil then
-            _G["AutoCombatLogEnabledDifficultyIds"] = namespace.getDefaultEnabledDifficultyIds()
-        end
-
         self:update()
     end,
 

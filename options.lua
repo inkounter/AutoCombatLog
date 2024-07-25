@@ -2,7 +2,7 @@
 
 local thisAddonName, namespace = ...
 
-local instanceDifficulties = {
+namespace.instanceDifficulties = {
     -- These values are derived from WeakAuras v3.4.1.
 
     { ["id"] = 0,   ["name"] = "No Instance" },
@@ -17,22 +17,9 @@ local instanceDifficulties = {
     { ["id"] = 24,  ["name"] = "Dungeon (Timewalking)" },
     { ["id"] = 33,  ["name"] = "Raid (Timewalking)" },
 }
-namespace.instanceDifficulties = instanceDifficulties
 
-local defaultEnabledDifficultyIds = {}
-for _, difficultyInfo in ipairs(instanceDifficulties) do
-    if difficultyInfo.default == true then
-        defaultEnabledDifficultyIds[difficultyInfo.id] = true
-    end
-end
+namespace.asVariableName = function(difficultyId)
+    -- Return the variable name corresponding to the specified 'difficultyId'.
 
-namespace.getDefaultEnabledDifficultyIds = function()
-    -- Return a clone of the table of default enabled difficulty IDs.
-
-    local clone = {}
-    for k, v in pairs(defaultEnabledDifficultyIds) do
-        clone[k] = v
-    end
-
-    return clone
+    return thisAddonName .. '_' .. difficultyId
 end
