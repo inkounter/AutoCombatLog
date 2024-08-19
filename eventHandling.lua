@@ -37,6 +37,27 @@ local CombatLoggerMixin = {
         LoggingCombat(false)
     end,
 
+    ["_registerOptions"] = function(self)
+        local category = Settings.RegisterVerticalLayoutCategory(thisAddonName)
+
+        for _, difficultyInfo in ipairs(namespace.instanceDifficulties) do
+            local variable = thisAddonName .. '_' .. difficultyInfo['id']
+            local setting = Settings.RegisterAddOnSetting(
+                                       category,
+                                       variable,
+                                       difficultyInfo['id'],
+                                       _G["AutoCombatLogEnabledDifficultyIds"],
+                                       type(true),
+                                       difficultyInfo['name'],
+                                       difficultyInfo['default'] or false)
+            setting['difficultyId'] = difficultyInfo['Id']
+            setting:SetValueChangedCallback(function() self:update() end)
+            Settings.CreateCheckbox(category, setting)
+        end
+
+        Settings.RegisterAddOnCategory(category)
+    end,
+
     ["update"] = function(self)
         -- Check the current instance difficulty and enable or disable combat
         -- logging accordingly.  Note that this handles the
@@ -62,6 +83,7 @@ local CombatLoggerMixin = {
         end
 
         self:UnregisterEvent("ADDON_LOADED")
+        self:_registerOptions()
         self:update()
     end,
 
@@ -95,7 +117,3 @@ local frame = CreateFrame("Frame")
 Mixin(frame, CombatLoggerMixin)
 
 frame:registerEvents()
-
-namespace.updateLogging = function()
-    frame:update()
-end
