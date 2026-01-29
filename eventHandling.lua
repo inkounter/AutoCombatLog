@@ -83,6 +83,7 @@ local CombatLoggerMixin = {
         end
 
         self:UnregisterEvent("ADDON_LOADED")
+        _G["AutoCombatLogEnabledDifficultyIds"] = _G["AutoCombatLogEnabledDifficultyIds"] or {}
         self:_registerOptions()
         self:update()
     end,
